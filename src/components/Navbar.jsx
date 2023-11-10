@@ -1,7 +1,16 @@
-import React from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import React, { useContext } from 'react'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
+import AlertContext from '../context/alerts/AlertContext';
 const Navbar = () => {
+  const { showAlert } = useContext(AlertContext)
   let location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogout = ()=>{
+    localStorage.clear('token')
+    navigate('/');
+    showAlert('Logout Successfully', 'success')
+  }
   
   return (
     <div>
@@ -19,21 +28,9 @@ const Navbar = () => {
                 <li className="nav-item">
                 <Link className={`nav-link ${location.pathname==='/about'?'active': ''}`} to="/about">About</Link>
                 </li>
-                <li className="nav-item dropdown">
-                <Link className="nav-link dropdown-toggle" to="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Dropdown
-                </Link>
-                <ul className="dropdown-menu">
-                    <li><Link className="dropdown-item" to="#">Action</Link></li>
-                    <li><Link className="dropdown-item" to="#">Another action</Link></li>
-                    <li><hr className="dropdown-divider" /></li>
-                    <li><Link className="dropdown-item" to="#">Something else here</Link></li>
-                </ul>
-                </li>
-                <li className="nav-item">
-                <Link className="nav-link disabled" aria-disabled="true">Disabled</Link>
-                </li>
             </ul>
+                {!localStorage.getItem('token')? <div><Link type="button" to='/login' className=" mx-2 btn btn-outline-info">Login</Link>
+                <Link type="button" to='/signup' className="mx-2 btn btn-outline-info">Sign up</Link></div>: <div><button type="button" className="mx-2 btn btn-outline-info" onClick={handleLogout}>Log Out</button></div>}
             </div>
         </div>
       </nav>
